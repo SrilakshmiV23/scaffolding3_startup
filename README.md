@@ -1,184 +1,189 @@
 # CSE 510 Warm-Up Assignment: Text Preprocessing Web Service
 
-Welcome to the warm-up assignment for CSE 510! This assignment will help you get familiar with text preprocessing, web development with Flask, and working with Project Gutenberg texts before diving into the main Shannon Information Theory assignment.
+In this assignment, I developed a Flask-based web application that processes text from Project Gutenberg books. The application accepts a .txt URL as input, downloads the book content, removes unnecessary header and footer sections, normalizes the text, calculates statistics, and generates a short summary. The results are displayed through a simple web interface.
+
+This assignment helped me understand text preprocessing and API development using Flask and prepared me for the upcoming Shannon Information Theory assignment.
 
 ## 🎯 Assignment Overview
 
-You'll build a web service that:
-- Fetches text from Project Gutenberg URLs
-- Cleans and preprocesses the text
-- Provides statistical analysis
-- Returns results via a clean web interface
+In this assignment, I implemented a web service that processes text from Project Gutenberg books. The application downloads book content from a .txt URL, removes unnecessary header and footer sections, normalizes the text, calculates statistics, and generates a short summary. The processed results are displayed through a Flask-based web interface.
+
 
 ## 🚀 Quick Start
 
 ### 1. Environment Setup
 
-First, test your environment:
-```bash
-python test_setup.py
-```
+I verified the environment setup by running:
 
-If all tests pass, you're ready to go! If not, install missing packages:
-```bash
-pip install -r requirements.txt
+python test_setup.py
+
+
+This confirmed that all required libraries were installed correctly and the system was ready to run the application.
+
+![alt text](image-10.png)
+
 ```
 
 ### 2. Run the Application
 
-Start the Flask development server:
-```bash
-python app.py
-```
+After completing the implementation, I started the Flask server using:
 
-Open your browser to: http://localhost:5000
+python app.py
+
+Then I opened the application in the browser at:
+
+http://localhost:5000
+
+The interface successfully allowed me to test Project Gutenberg text URLs and view processed results.
+
 
 ### 3. Test the Interface
 
-The web interface includes example URLs you can click to test:
+After running the Flask application, I tested the web interface using several Project Gutenberg book URLs such as:
+
 - Pride and Prejudice by Jane Austen
-- Frankenstein by Mary Shelley  
+- Frankenstein by Mary Shelley
 - Alice in Wonderland by Lewis Carroll
 - Moby Dick by Herman Melville
 
-## 📝 What You Need to Implement
+For each book, the application successfully downloaded the text, removed the header and footer sections, calculated statistics, generated a short summary, and displayed the cleaned text preview in the browser.
 
-### Part 1: Environment Setup (10 points)
-- Run `test_setup.py` and ensure all tests pass
-- Verify you can access Project Gutenberg URLs
+## Implementation Details
 
-### Part 2: TextPreprocessor Methods (25 points)
+As part of this assignment, I completed the required preprocessing methods in 'starter_preprocess.py'.
 
-Complete these methods in `starter_preprocess.py`:
+### fetch_from_url(url)
 
-#### `fetch_from_url(url: str) -> str`
-- Download text content from a Project Gutenberg URL
-- Validate that the URL ends with `.txt`
-- Handle network errors appropriately
-- Return the raw text content
+I implemented this method to download text content from a Project Gutenberg '.txt' file URL. The function first checks whether the provided URL ends with '.txt', then retrieves the text using a request call and returns the raw content. I also handled possible network-related errors to make the function more reliable.
 
-#### `get_text_statistics(text: str) -> Dict`
-- Return a dictionary with:
-  - `total_characters`: Total character count
-  - `total_words`: Total word count  
-  - `total_sentences`: Total sentence count
-  - `avg_word_length`: Average word length
-  - `avg_sentence_length`: Average sentence length (words per sentence)
-  - `most_common_words`: List of top 10 most common words
 
-#### `create_summary(text: str, num_sentences: int = 3) -> str`
-- Extract the first N sentences from the cleaned text
-- Return as a single string
+### get_text_statistics(text)
 
-### Part 3: Flask API Endpoints (10 points)
+I implemented this function to calculate important statistics from the cleaned text. The function returns the total number of characters, total number of words, total number of sentences, average word length, average sentence length, and the top 10 most common words. These values help understand the structure of the text before further analysis.
 
-Complete these endpoints in `app.py`:
+### create_summary(text, num_sentences = 3)
 
-#### `POST /api/clean`
-Expected input:
-```json
-{"url": "https://www.gutenberg.org/files/1342/1342-0.txt"}
-```
+I implemented this function to generate a short extractive summary of the text. It selects the first three sentences from the cleaned text and returns them as a single string. This provides a quick preview of the book content.
 
-Expected output:
-```json
+### Flask API Endpoints Implemented
+
+As part of this assignment, I implemented the required API endpoints in 'app.py' to connect the preprocessing logic with the web interface.
+
+#### POST /api/clean
+
+This endpoint accepts a Project Gutenberg '.txt' file URL as input. It downloads the book content, removes the header and footer sections, normalizes the text, calculates statistics, and generates a short summary. The endpoint returns a JSON response containing a cleaned text preview (first 500 characters), statistics, and summary.
+
+Example input:
+
 {
-    "success": true,
-    "cleaned_text": "It is a truth universally acknowledged...",
-    "statistics": {
-        "total_characters": 717571,
-        "total_words": 124588,
-        "total_sentences": 6403,
-        "avg_word_length": 4.3,
-        "avg_sentence_length": 19.5,
-        "most_common_words": ["the", "to", "of", "and", "a", ...]
-    },
-    "summary": "It is a truth universally acknowledged..."
+"url": "https://www.gutenberg.org/files/1342/1342-0.txt"
 }
-```
 
-#### `POST /api/analyze`
-Expected input:
-```json
-{"text": "Your raw text here..."}
-```
+Example output includes:
 
-Expected output:
-```json
-{
-    "success": true,
-    "statistics": {...}
-}
-```
+- cleaned text preview
+- text statistics
+- generated summary
 
-### Part 4: Frontend Integration (5 points)
+#### POST /api/analyze
 
-Complete the JavaScript in `templates/index.html`:
-- Implement the form submission handler
-- Make proper API calls to `/api/clean`
-- Handle responses and errors
-- Display results using the provided `displayResults()` function
+This endpoint accepts raw text input and returns statistical analysis of the text. It calculates total characters, total words, total sentences, average word length, average sentence length, and the most common words. This endpoint is useful for analyzing text directly without downloading it from a URL.
 
-## 🧪 Testing Your Implementation
 
-### Manual Testing
-1. Start the server: `python app.py`
-2. Open http://localhost:5000
-3. Try the example URLs
-4. Verify statistics make sense
+### Part 4: Frontend Integration
 
-### Code Testing
-```bash
-# Test individual components
+### Frontend Integration
+
+I completed the frontend integration in 'templates/index.html' by implementing the JavaScript form submission handler and connecting it with the Flask backend API.
+
+The interface accepts a Project Gutenberg '.txt' URL from the user and sends a request to the '/api/clean' endpoint using the fetch API. After receiving the response, the application displays the cleaned text preview, statistics, and generated summary directly on the webpage.
+
+I also handled error responses so that the interface shows appropriate messages if an invalid URL is entered or if the request fails.
+
+## Testing the Implementation
+
+After completing the preprocessing methods and API endpoints, I tested the application manually by running the Flask server using:
+
+python app.py
+
+Then I opened the web interface at:
+
+http://localhost:5000
+
+
+I tested the application using several Project Gutenberg '.txt' book URLs. For each test case, the application successfully downloaded the text, removed the header and footer sections, calculated statistics, generated a short summary, and displayed the cleaned text preview in the browser.
+
+The results confirmed that the preprocessing pipeline and API endpoints were working correctly.
+
+## Code Testing
+
+After implementing the required preprocessing methods in 'starter_preprocess.py', I tested the functionality by running:
+
 python starter_preprocess.py
 
-# Test specific methods
-python -c "
-from starter_preprocess import TextPreprocessor
-tp = TextPreprocessor()
-# Test your implementations here
-"
-```
+This verified that tokenization, normalization, and statistics generation were working correctly.
+![alt text](image-11.png)
+
+Next, I tested the complete web application by running:
+
+python app.py
+
+Then I opened the browser at:
+
+http://localhost:5000
+
+and tested the application using multiple Project Gutenberg `.txt`book URLs. The system successfully returned cleaned text previews, statistics and summaries for all tested inputs.
+
+aand tested the application using multiple Project Gutenberg `.txt` book URLs. The system successfully returned cleaned text previews, statistics and summaries for all tested inputs.
+https://www.gutenberg.org/files/1342/1342-0.txt
+![alt text](image-4.png)
+![alt text](image-5.png)
+
+
+
+https://www.gutenberg.org/files/11/11-0.txt
+![alt text](image-6.png)
+![alt text](image-7.png)
+
+
+https://www.gutenberg.org/files/84/84-0.txt
+![alt text](image-8.png)
+![alt text](image-9.png)
+
+
 
 ## 📁 Project Structure
 
-```
-warmup-starter-repo/
-├── README.md                    # This file
-├── requirements.txt             # Python dependencies
-├── test_setup.py               # Environment validation
-├── app.py                      # Flask application (TODO: implement endpoints)
-├── starter_preprocess.py       # Text processing (TODO: implement methods)
+scaffolding3_startup/
+├── README.md       # Project documentation
+├── requirements.txt      # Python dependencies
+├── test_setup.py        # Environment validation script
+├── app.py            # Flask application with API endpoints implemented
+├── starter_preprocess.py          # Text preprocessing functions implemented
+├── screenshot.png           # Screenshot of working application output
 └── templates/
-    └── index.html              # Web interface (TODO: implement API calls)
-```
+└── index.html          # Web interface connected to backend API
 
-## 🎓 Learning Objectives
 
-By completing this assignment, you will:
-- Understand text preprocessing fundamentals
-- Learn basic web API development with Flask
-- Practice working with external data sources
-- Gain experience with JSON APIs and frontend integration
-- Build confidence for the main Shannon assignment
+## What I Learned From This Assignment
 
-## 💡 Tips for Success
+Through this assignment, I learned how to work with text preprocessing using Python and Flask. I implemented functions to fetch text from Project Gutenberg URLs, clean unnecessary header and footer content, normalize text, and calculate useful statistics such as word count and sentence count.
 
-1. **Start with Part 2**: Implement the TextPreprocessor methods first
-2. **Test incrementally**: Test each method as you implement it
-3. **Use the existing methods**: The starter code provides helper methods for tokenization
-4. **Handle errors gracefully**: Project Gutenberg URLs can sometimes be slow
-5. **Read the comments**: The TODO comments provide helpful hints
+I also learned how to create Flask API endpoints and connect them with a frontend interface using JavaScript. This helped me understand how backend processing and frontend interaction work together in a web application.
 
-## 🆘 Common Issues
+Overall, this assignment helped me prepare for the upcoming Shannon Information Theory assignment where similar preprocessing steps will be used again.
 
-**"Module not found" errors**: Run `pip install -r requirements.txt`
 
-**Network timeouts**: Project Gutenberg can be slow; add reasonable timeouts to your requests
+## Issues I Faced While Running the Project
 
-**Text encoding issues**: Project Gutenberg uses UTF-8; specify encoding when needed
+While working on this assignment, I faced a few small setup issues:
 
-**Port already in use**: Kill existing Flask processes or use a different port
+- Missing packages initially, which I fixed using 'pip install -r requirements.txt'
+- Sometimes Project Gutenberg URLs took longer to load
+- Flask port already running once, which I resolved by restarting the server
+
+After fixing these, the application worked correctly.
+
 
 ## 📚 Resources
 
@@ -186,14 +191,3 @@ By completing this assignment, you will:
 - [Requests Library](https://requests.readthedocs.io/)
 - [Project Gutenberg](https://www.gutenberg.org/)
 - [Regular Expressions in Python](https://docs.python.org/3/library/re.html)
-
-## 🎯 Grading Rubric
-
-- **Environment Setup (10 points)**: `test_setup.py` passes all tests
-- **TextPreprocessor Implementation (25 points)**: All three methods work correctly
-- **Flask API Endpoints (10 points)**: Both endpoints return proper JSON responses  
-- **Frontend Integration (5 points)**: Web interface successfully calls APIs and displays results
-
-**Total: 50 points**
-
-Good luck! This assignment prepares you for the main Shannon Information Theory assignment where you'll implement n-gram models and text generation using similar preprocessing techniques.
